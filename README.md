@@ -104,12 +104,41 @@ frontend/
    npm install
    ```
 
-3. Start the development server:
-   ```bash
-   npm start
+3. Create a `.env` file (if needed for API URL configuration):
+   ```
+   VITE_API_URL=http://localhost:5000
    ```
 
-The application will be available at `http://localhost:3000`
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+The application will be available at `http://localhost:5173` (Vite default)
+
+## Running the Full Stack Locally
+
+### Quick Start (One-Command Setup)
+```bash
+# From project root, install both frontend and backend dependencies
+npm install
+cd backend && npm install && cd ..
+cd frontend && npm install && cd ..
+
+# Start backend (Terminal 1)
+cd backend
+npm run dev
+
+# Start frontend (Terminal 2)
+cd frontend
+npm run dev
+```
+
+### Manual Setup
+1. **Backend**: Start the backend server first (runs on `http://localhost:5000`)
+2. **Frontend**: Then start the frontend development server (runs on `http://localhost:5173`)
+
+Ensure the backend is running before accessing the frontend to avoid API connection errors.
 
 ## Database Models
 
@@ -153,13 +182,144 @@ The application will be available at `http://localhost:3000`
 - bcryptjs for password hashing
 - CORS for cross-origin requests
 
+## Deployment Guide
+
+### Frontend Deployment (Vercel)
+
+1. Push code to GitHub (already done ✓)
+2. Visit [vercel.com](https://vercel.com)
+3. Import your GitHub repository
+4. Configure build settings:
+   ```
+   Framework Preset: Vite
+   Root Directory: ./frontend
+   Build Command: npm run build
+   Output Directory: dist
+   ```
+5. Add environment variables:
+   ```
+   VITE_API_URL=<your-backend-url>
+   ```
+6. Deploy!
+
+### Backend Deployment (Railway or Render)
+
+#### Option 1: Railway
+1. Visit [railway.app](https://railway.app)
+2. Create new project → Import from GitHub
+3. Select repository and `backend` directory
+4. Configure environment variables:
+   ```
+   MONGO_URI=<your-mongodb-atlas-url>
+   JWT_SECRET=<your-jwt-secret>
+   PORT=5000
+   NODE_ENV=production
+   ```
+5. Deploy
+
+#### Option 2: Render
+1. Visit [render.com](https://render.com)
+2. Create new Web Service → GitHub
+3. Connect repository, set root directory to `backend`
+4. Configure:
+   - Build Command: `npm install`
+   - Start Command: `npm start`
+5. Add environment variables in dashboard
+6. Deploy
+
+### MongoDB Atlas Setup (Cloud Database)
+
+1. Visit [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas)
+2. Create a free cluster
+3. Create database user with strong password
+4. Get connection string and add to `.env`:
+   ```
+   MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/<dbname>?retryWrites=true&w=majority
+   ```
+
+## Environment Variables Reference
+
+### Backend (.env)
+```
+# MongoDB
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
+
+# JWT
+JWT_SECRET=your-super-secret-jwt-key-change-this
+
+# Server
+PORT=5000
+NODE_ENV=development
+
+# CORS
+FRONTEND_URL=http://localhost:5173
+```
+
+### Frontend (.env.local or .env)
+```
+# API Configuration
+VITE_API_URL=http://localhost:5000
+VITE_API_TIMEOUT=10000
+```
+
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
 4. Test thoroughly
-5. Submit a pull request
+5. Commit changes (`git commit -m 'Add amazing feature'`)
+6. Push to branch (`git push origin feature/amazing-feature`)
+7. Submit a pull request
+
+## Troubleshooting
+
+### Common Issues
+
+**Frontend can't connect to backend:**
+- Check backend is running on port 5000
+- Verify `VITE_API_URL` environment variable is correct
+- Check browser console for CORS errors
+- Ensure backend CORS is configured for frontend URL
+
+**MongoDB connection error:**
+- Verify `MONGO_URI` is correct
+- Check MongoDB cluster IP whitelist includes your IP
+- Ensure database credentials are correct
+- For local MongoDB, verify `mongod` service is running
+
+**Port already in use:**
+```bash
+# Kill process on port 5000 (Unix/Mac)
+lsof -ti :5000 | xargs kill -9
+
+# Kill process on port 5000 (Windows)
+netstat -ano | findstr :5000
+taskkill /PID <PID> /F
+```
+
+**Dependencies installation fails:**
+```bash
+# Clear npm cache and reinstall
+npm cache clean --force
+rm -rf node_modules package-lock.json
+npm install
+```
+
+## Project Statistics
+
+- **Total Files**: 175+
+- **Frontend Components**: 8
+- **Backend Routes**: 5 API modules
+- **Database Collections**: 5 (User, Destination, District, Contact, Feedback)
+- **Destinations**: 100+ tourist locations across districts
+
+## Support & Contact
+
+For issues or questions:
+- Open an issue on GitHub
+- Check existing issues for solutions
+- Review API documentation in the code
 
 ## License
 
