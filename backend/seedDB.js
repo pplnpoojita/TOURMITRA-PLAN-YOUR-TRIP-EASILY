@@ -4,7 +4,7 @@ const District = require('./models/District');
 const Destination = require('./models/Destination');
 
 // Import from frontend static data
-const { districtMeta, destinations } = require('../my-app/src/data/destinations.js');
+const { districtMeta, destinations } = require('../frontend/src/data/destinations.js');
 
 dotenv.config();
 
