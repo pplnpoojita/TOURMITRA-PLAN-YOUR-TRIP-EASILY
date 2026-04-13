@@ -35,21 +35,21 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
-    fetch('${API_BASE_URL}/api/users')
+    fetch(`${API_BASE_URL}/api/users`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setUsers(data);
       })
       .catch(err => console.error("Error fetching users:", err));
 
-    fetch('${API_BASE_URL}/api/contact')
+    fetch(`${API_BASE_URL}/api/contact`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setMessages(data);
       })
       .catch(err => console.error("Error fetching messages:", err));
 
-    fetch('${API_BASE_URL}/api/feedback')
+    fetch(`${API_BASE_URL}/api/feedback`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setFeedbacks(data);
