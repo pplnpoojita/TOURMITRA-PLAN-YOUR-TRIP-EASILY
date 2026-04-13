@@ -68,7 +68,7 @@ export default function App() {
       if (user?.user?.role) setRole(user.user.role);
       else if (user?.role) setRole(user.role);
     }
-
+    const fetchOnlineCount = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/api/users/online`);
         if (res.ok) {
