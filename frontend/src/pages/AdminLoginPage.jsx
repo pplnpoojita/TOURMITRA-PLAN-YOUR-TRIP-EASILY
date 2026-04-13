@@ -31,13 +31,16 @@ export default function AdminLoginPage({ setRole }) {
       return;
     }
 
-    if (name !== "Poojita" || email !== "tourmitra0821@gmail.com" || password !== "tourmitra@08") {
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim().toLowerCase();
+    
+    if (trimmedName.toLowerCase() !== "poojita" || trimmedEmail !== "tourmitra0821@gmail.com" || password !== "tourmitra@08") {
       alert("Invalid Admin Credentials");
       return;
     }
 
     try {
-      const loginRes = await fetch("http://localhost:5001/api/auth/login", {
+      const loginRes = await fetch("http://16.16.184.208:5001/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
@@ -50,7 +53,7 @@ export default function AdminLoginPage({ setRole }) {
         setRole("admin");
         navigate("/admin-dashboard");
       } else {
-        const registerRes = await fetch("http://localhost:5001/api/auth/register", {
+        const registerRes = await fetch("http://16.16.184.208:5001/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, email, password, role: "admin" })

@@ -15,7 +15,7 @@ export default function DestinationCard({ item }) {
     }
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5001/api/users/visit", {
+      const res = await fetch("http://16.16.184.208:5001/api/users/visit", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

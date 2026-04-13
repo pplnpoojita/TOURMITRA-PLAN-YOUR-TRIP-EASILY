@@ -15,7 +15,7 @@ export default function Navbar({ role, setRole, onlineData = { onlineCount: 0, o
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        await fetch("http://localhost:5001/api/users/logout", {
+        await fetch("http://16.16.184.208:5001/api/users/logout", {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` }
         });

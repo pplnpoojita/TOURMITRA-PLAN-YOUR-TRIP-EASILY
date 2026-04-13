@@ -36,7 +36,7 @@ export default function FeedbackPage() {
     
     setStatus("Submitting...");
     try {
-      const res = await fetch("http://localhost:5001/api/feedback", {
+      const res = await fetch("http://16.16.184.208:5001/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form)

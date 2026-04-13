@@ -70,7 +70,7 @@ export default function App() {
 
     const fetchOnlineCount = async () => {
       try {
-        const res = await fetch("http://localhost:5001/api/users/online");
+        const res = await fetch("http://16.16.184.208:5001/api/users/online");
         if (res.ok) {
           const data = await res.json();
           setOnlineData({ onlineCount: data.onlineCount, onlineUsers: data.onlineUsers || [] });
@@ -84,7 +84,7 @@ export default function App() {
       const token = localStorage.getItem("token");
       if (!token) return;
       try {
-        await fetch("http://localhost:5001/api/users/ping", {
+        await fetch("http://16.16.184.208:5001/api/users/ping", {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` }
         });

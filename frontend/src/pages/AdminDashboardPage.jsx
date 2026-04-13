@@ -17,7 +17,7 @@ export default function AdminDashboardPage() {
   const handleSendReply = async (id) => {
     if (!replyText.trim()) return;
     try {
-      const res = await fetch(`http://localhost:5001/api/contact/${id}/reply`, {
+      const res = await fetch(`http://16.16.184.208:5001/api/contact/${id}/reply`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sender: "admin", reply: replyText }),
@@ -34,21 +34,21 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
-    fetch('http://localhost:5001/api/users')
+    fetch('http://16.16.184.208:5001/api/users')
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setUsers(data);
       })
       .catch(err => console.error("Error fetching users:", err));
 
-    fetch('http://localhost:5001/api/contact')
+    fetch('http://16.16.184.208:5001/api/contact')
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setMessages(data);
       })
       .catch(err => console.error("Error fetching messages:", err));
 
-    fetch('http://localhost:5001/api/feedback')
+    fetch('http://16.16.184.208:5001/api/feedback')
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setFeedbacks(data);
