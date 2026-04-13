@@ -3,6 +3,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionTitle from "../components/SectionTitle";
 import BackButton from "../components/BackButton";
+import { API_BASE_URL } from "../apiConfig";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -48,7 +49,7 @@ export default function ContactPage() {
     
     setStatus("Sending...");
     try {
-      const res = await fetch("http://16.16.184.208:5001/api/contact", {
+      const res = await fetch(`${API_BASE_URL}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form)

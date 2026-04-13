@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Star } from "lucide-react";
 import SectionTitle from "../components/SectionTitle";
 import BackButton from "../components/BackButton";
+import { API_BASE_URL } from "../apiConfig";
 
 export default function FeedbackPage() {
   const [form, setForm] = useState({ name: "", email: "", rating: 0, comments: "" });
@@ -36,7 +37,7 @@ export default function FeedbackPage() {
     
     setStatus("Submitting...");
     try {
-      const res = await fetch("http://16.16.184.208:5001/api/feedback", {
+      const res = await fetch(`${API_BASE_URL}/api/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form)

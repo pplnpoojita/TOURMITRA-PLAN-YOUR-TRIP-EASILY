@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { LogIn } from "lucide-react";
 import { districtMeta, destinations } from "../data/destinations";
 import BackButton from "../components/BackButton";
+import { API_BASE_URL } from "../apiConfig";
 
 export default function TouristLoginPage({ setRole }) {
   const [isLoginMode, setIsLoginMode] = useState(false);
@@ -50,7 +51,7 @@ export default function TouristLoginPage({ setRole }) {
     }
 
     try {
-      const registerRes = await fetch("http://16.16.184.208:5001/api/auth/register", {
+      const registerRes = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -94,7 +95,7 @@ export default function TouristLoginPage({ setRole }) {
     }
 
     try {
-      const loginRes = await fetch("http://16.16.184.208:5001/api/auth/login", {
+      const loginRes = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
@@ -128,7 +129,7 @@ export default function TouristLoginPage({ setRole }) {
     }
 
     try {
-      const resetRes = await fetch("http://16.16.184.208:5001/api/auth/reset-password", {
+      const resetRes = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, newPassword: password })

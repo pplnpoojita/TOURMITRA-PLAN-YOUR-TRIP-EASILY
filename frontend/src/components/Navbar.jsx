@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Menu, ShieldCheck, User, X } from "lucide-react";
 import { motion } from "framer-motion";
 import Logo from "./Logo";
+import { API_BASE_URL } from "../apiConfig";
 
 export default function Navbar({ role, setRole, onlineData = { onlineCount: 0, onlineUsers: [] }, setOnlineData }) {
   const [open, setOpen] = useState(false);
@@ -15,7 +16,7 @@ export default function Navbar({ role, setRole, onlineData = { onlineCount: 0, o
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        await fetch("http://16.16.184.208:5001/api/users/logout", {
+        await fetch(`${API_BASE_URL}/api/users/logout`, {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` }
         });

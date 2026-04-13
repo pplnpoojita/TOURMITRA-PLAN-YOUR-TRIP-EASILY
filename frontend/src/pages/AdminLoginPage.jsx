@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LayoutDashboard } from "lucide-react";
 import BackButton from "../components/BackButton";
+import { API_BASE_URL } from "../apiConfig";
 
 export default function AdminLoginPage({ setRole }) {
   const [name, setName] = useState("");
@@ -40,7 +41,7 @@ export default function AdminLoginPage({ setRole }) {
     }
 
     try {
-      const loginRes = await fetch("http://16.16.184.208:5001/api/auth/login", {
+      const loginRes = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
@@ -53,7 +54,7 @@ export default function AdminLoginPage({ setRole }) {
         setRole("admin");
         navigate("/admin-dashboard");
       } else {
-        const registerRes = await fetch("http://16.16.184.208:5001/api/auth/register", {
+        const registerRes = await fetch(`${API_BASE_URL}/api/auth/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, email, password, role: "admin" })

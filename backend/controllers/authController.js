@@ -12,7 +12,8 @@ const generateToken = (id) => {
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = async (req, res) => {
-  const { name, email, password, role, phone, district } = req.body;
+  const { name, password, role, phone, district } = req.body;
+  const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
 
   try {
     const userExists = await User.findOne({ email });
@@ -56,7 +57,8 @@ const registerUser = async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 const authUser = async (req, res) => {
-  const { email, password } = req.body;
+  const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
+  const password = req.body.password;
 
   try {
     // Fixed Admin Credentials Enforced
@@ -118,7 +120,8 @@ const authUser = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-  const { email, newPassword } = req.body;
+  const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
+  const newPassword = req.body.newPassword;
 
   try {
     const user = await User.findOne({ email });

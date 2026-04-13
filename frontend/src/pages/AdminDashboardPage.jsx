@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { destinations } from "../data/destinations";
 import BackButton from "../components/BackButton";
+import { API_BASE_URL } from "../apiConfig";
 
 export default function AdminDashboardPage() {
   const [showForm, setShowForm] = useState(false);
@@ -17,7 +18,7 @@ export default function AdminDashboardPage() {
   const handleSendReply = async (id) => {
     if (!replyText.trim()) return;
     try {
-      const res = await fetch(`http://16.16.184.208:5001/api/contact/${id}/reply`, {
+      const res = await fetch(`${API_BASE_URL}/api/contact/${id}/reply`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sender: "admin", reply: replyText }),
@@ -34,21 +35,21 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
-    fetch('http://16.16.184.208:5001/api/users')
+    fetch('${API_BASE_URL}/api/users')
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setUsers(data);
       })
       .catch(err => console.error("Error fetching users:", err));
 
-    fetch('http://16.16.184.208:5001/api/contact')
+    fetch('${API_BASE_URL}/api/contact')
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setMessages(data);
       })
       .catch(err => console.error("Error fetching messages:", err));
 
-    fetch('http://16.16.184.208:5001/api/feedback')
+    fetch('${API_BASE_URL}/api/feedback')
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setFeedbacks(data);

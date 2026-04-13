@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from "react-route
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/Navbar";
+import { API_BASE_URL } from "./apiConfig";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import TouristLoginPage from "./pages/TouristLoginPage";
@@ -68,9 +69,8 @@ export default function App() {
       else if (user?.role) setRole(user.role);
     }
 
-    const fetchOnlineCount = async () => {
       try {
-        const res = await fetch("http://16.16.184.208:5001/api/users/online");
+        const res = await fetch(`${API_BASE_URL}/api/users/online`);
         if (res.ok) {
           const data = await res.json();
           setOnlineData({ onlineCount: data.onlineCount, onlineUsers: data.onlineUsers || [] });
@@ -84,7 +84,7 @@ export default function App() {
       const token = localStorage.getItem("token");
       if (!token) return;
       try {
-        await fetch("http://16.16.184.208:5001/api/users/ping", {
+        await fetch(`${API_BASE_URL}/api/users/ping`, {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` }
         });

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, MapPin, Check } from "lucide-react";
 import StarRating from "./StarRating";
+import { API_BASE_URL } from "../apiConfig";
 
 export default function DestinationCard({ item }) {
   const [visited, setVisited] = useState(false);
@@ -15,7 +16,7 @@ export default function DestinationCard({ item }) {
     }
     setLoading(true);
     try {
-      const res = await fetch("http://16.16.184.208:5001/api/users/visit", {
+      const res = await fetch(`${API_BASE_URL}/api/users/visit`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

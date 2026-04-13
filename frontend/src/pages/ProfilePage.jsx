@@ -3,6 +3,7 @@ import { User, Star } from "lucide-react";
 import SectionTitle from "../components/SectionTitle";
 import BackButton from "../components/BackButton";
 import { destinations } from "../data/destinations";
+import { API_BASE_URL } from "../apiConfig";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
@@ -18,7 +19,7 @@ export default function ProfilePage() {
   const handleSendUserReply = async (id) => {
     if (!replyText.trim()) return;
     try {
-      const res = await fetch(`http://16.16.184.208:5001/api/contact/${id}/reply`, {
+      const res = await fetch(`${API_BASE_URL}/api/contact/${id}/reply`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sender: "user", reply: replyText }),
@@ -40,7 +41,7 @@ export default function ProfilePage() {
     const email = profile?.email || userLocal.email || userLocal.user?.email || "user@example.com";
     const name = profile?.name || userLocal.name || userLocal.user?.name || "User";
     try {
-      const res = await fetch("http://16.16.184.208:5001/api/contact", {
+      const res = await fetch(`${API_BASE_URL}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, message: newMsg }),
@@ -62,7 +63,7 @@ export default function ProfilePage() {
     if (!token) return;
 
     try {
-      const res = await fetch("http://16.16.184.208:5001/api/users/profile", {
+      const res = await fetch(`${API_BASE_URL}/api/users/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -79,7 +80,7 @@ export default function ProfilePage() {
       }
 
       // Fetch my messages
-      const msgRes = await fetch("http://16.16.184.208:5001/api/contact/my-messages", {
+      const msgRes = await fetch(`${API_BASE_URL}/api/contact/my-messages`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (msgRes.ok) {
@@ -87,7 +88,7 @@ export default function ProfilePage() {
       }
 
       // Fetch my feedbacks
-      const fbkRes = await fetch("http://16.16.184.208:5001/api/feedback/my-feedbacks", {
+      const fbkRes = await fetch(`${API_BASE_URL}/api/feedback/my-feedbacks`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (fbkRes.ok) {
@@ -107,7 +108,7 @@ export default function ProfilePage() {
     if (!token) return;
 
     try {
-      const res = await fetch("http://16.16.184.208:5001/api/users/visit", {
+      const res = await fetch(`${API_BASE_URL}/api/users/visit`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
