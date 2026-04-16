@@ -18,7 +18,7 @@ To run this project, you need two terminal windows open because it has two parts
    ```
 3. **Run the Backend Server**:
    ```powershell
-   npm run dev
+   npm start
    ```
    *(Wait until you see "Server running on port 5001". This means your computer is successfully talking to the Cloud Database!)*
 
@@ -33,7 +33,7 @@ To run this project, you need two terminal windows open because it has two parts
    ```
 3. **Run the Website**:
    ```powershell
-   npm run dev
+   npm start
    ```
 
 ### Part 3: View the Site
