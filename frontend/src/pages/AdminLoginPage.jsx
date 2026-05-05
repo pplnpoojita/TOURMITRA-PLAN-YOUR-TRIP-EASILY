@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LayoutDashboard } from "lucide-react";
 import BackButton from "../components/BackButton";
@@ -20,6 +20,22 @@ export default function AdminLoginPage({ setRole }) {
     }
     setName(val);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const userStr = localStorage.getItem("user");
+      let user = {};
+      try {
+        user = userStr ? JSON.parse(userStr) : {};
+      } catch (e) {}
+      if (user.role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [navigate]);
 
   const handleAdminLogin = async () => {
     if (!name || !email || !password) {

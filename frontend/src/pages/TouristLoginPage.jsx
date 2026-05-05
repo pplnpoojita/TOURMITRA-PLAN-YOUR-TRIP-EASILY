@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogIn } from "lucide-react";
 import { districtMeta, destinations } from "../data/destinations";
@@ -15,7 +15,14 @@ export default function TouristLoginPage({ setRole }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [district, setDistrict] = useState("east-godavari");
   const [nameError, setNameError] = useState("");
+  const [authError, setAuthError] = useState("");
+  const [authSuccess, setAuthSuccess] = useState("");
   const navigate = useNavigate();
+
+  const clearAuthMessages = () => {
+    setAuthError("");
+    setAuthSuccess("");
+  };
 
   const handleNameChange = (e) => {
     const val = e.target.value;
@@ -27,26 +34,50 @@ export default function TouristLoginPage({ setRole }) {
     setName(val);
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const userStr = localStorage.getItem("user");
+      let user = {};
+      try {
+        user = userStr ? JSON.parse(userStr) : {};
+      } catch (e) { }
+      if (user.role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [navigate]);
+
   const handleRegisterSubmit = async () => {
+    clearAuthMessages();
+
     if (!name || !email || !phone || !password || !district) {
-      alert("Please fill in all fields");
+      setAuthError("Please fill in all fields");
+      return;
+    }
+
+    if (password.length < 6) {
+      setAuthError("Password must be at least 6 characters.");
       return;
     }
 
     if (nameError) {
-      alert("Please resolve the errors before submitting.");
+      setAuthError("Please resolve the errors before submitting.");
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address.");
+      setAuthError("Please enter a valid email address.");
       return;
     }
 
-    const phoneRegex = /^\d+$/;
+    const phoneRegex = /^\d{10}$/;
     if (!phoneRegex.test(phone)) {
-      alert("Phone number must contain only numbers.");
+      alert("Phone number must be exactly 10 digits.");
+      setAuthError("Phone number must be exactly 10 digits.");
       return;
     }
 
@@ -65,32 +96,38 @@ export default function TouristLoginPage({ setRole }) {
       });
 
       if (registerRes.ok) {
-        alert("Registration successful! Please login to continue.");
+        setAuthSuccess("Registration successful! Please login to continue.");
         setIsLoginMode(true);
       } else {
         const data = await registerRes.json();
         if (registerRes.status === 400 && data.message === 'User already exists') {
-          alert("Account already exists! Please click Login to continue.");
-          setIsLoginMode(true);
+          setAuthError("Account already exists! Please click Login to continue.");
         } else {
-          alert("Registration failed: " + data.message);
+          setAuthError("Registration failed: " + data.message);
         }
       }
     } catch (error) {
       console.error(error);
-      alert("Error connecting to server.");
+      setAuthError("Error connecting to server.");
     }
   };
 
   const handleLoginSubmit = async () => {
+    clearAuthMessages();
+
     if (!email || !password || !district) {
-      alert("Please fill in email, password and select a district");
+      setAuthError("Please fill in email, password and select a district");
+      return;
+    }
+
+    if (password.length < 6) {
+      setAuthError("Password must be at least 6 characters.");
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address.");
+      setAuthError("Please enter a valid email address.");
       return;
     }
 
@@ -109,22 +146,29 @@ export default function TouristLoginPage({ setRole }) {
         navigate(`/district/${district}`);
       } else {
         const data = await loginRes.json();
-        alert("Login failed: " + data.message);
+        setAuthError("Login failed: " + data.message);
       }
     } catch (error) {
       console.error(error);
-      alert("Error connecting to server.");
+      setAuthError("Error connecting to server.");
     }
   };
 
   const handleResetPasswordSubmit = async () => {
+    clearAuthMessages();
+
     if (!email || !password || !confirmPassword) {
-      alert("Please fill in all fields.");
+      setAuthError("Please fill in all fields.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setAuthError("Password must be at least 6 characters.");
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
+      setAuthError("Passwords do not match.");
       return;
     }
 
@@ -136,18 +180,18 @@ export default function TouristLoginPage({ setRole }) {
       });
 
       if (resetRes.ok) {
-        alert("Password reset successfully! Please login with your new password.");
+        setAuthSuccess("Password reset successfully! Please login with your new password.");
         setIsForgotPasswordMode(false);
         setIsLoginMode(true);
         setPassword("");
         setConfirmPassword("");
       } else {
         const data = await resetRes.json();
-        alert("Password reset failed: " + data.message);
+        setAuthError("Password reset failed: " + data.message);
       }
     } catch (error) {
       console.error(error);
-      alert("Error connecting to server.");
+      setAuthError("Error connecting to server.");
     }
   };
 
@@ -161,14 +205,25 @@ export default function TouristLoginPage({ setRole }) {
             {isForgotPasswordMode ? "Reset Password" : isLoginMode ? "Tourist Login" : "Tourist Registration"}
           </h1>
           <p className="mt-2 text-slate-600">
-            {isForgotPasswordMode 
-              ? "Enter your email and new password to reset your account access." 
-              : isLoginMode 
-                  ? "Welcome back! Please enter your details to continue exploring." 
-                  : "Register below, select your preferred district, and start discovering destinations."}
+            {isForgotPasswordMode
+              ? "Enter your email and new password to reset your account access."
+              : isLoginMode
+                ? "Welcome back! Please enter your details to continue exploring."
+                : "Register below, select your preferred district, and start discovering destinations."}
           </p>
 
           <div className="mt-6 space-y-5">
+            {authError && (
+              <div className="rounded-xl bg-red-50 p-4 text-sm font-medium text-red-600 border border-red-100">
+                {authError}
+              </div>
+            )}
+            {authSuccess && (
+              <div className="rounded-xl bg-green-50 p-4 text-sm font-medium text-green-600 border border-green-100">
+                {authSuccess}
+              </div>
+            )}
+
             {!isLoginMode && !isForgotPasswordMode && (
               <div>
                 <label className="mb-2 block text-sm font-medium text-slate-700">Your Name</label>
@@ -185,7 +240,7 @@ export default function TouristLoginPage({ setRole }) {
             {!isLoginMode && !isForgotPasswordMode && (
               <div>
                 <label className="mb-2 block text-sm font-medium text-slate-700">Phone Number</label>
-                <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Enter your phone number" className="h-12 w-full rounded-2xl border border-slate-300 px-4 outline-none focus:border-slate-500" />
+                <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Enter your phone number" className="h-12 w-full rounded-2xl border border-slate-300 px-4 outline-none focus:border-slate-500" maxLength="10" />
               </div>
             )}
 
@@ -195,7 +250,7 @@ export default function TouristLoginPage({ setRole }) {
                   {isForgotPasswordMode ? "New Password" : "Password"}
                 </label>
                 {isLoginMode && !isForgotPasswordMode && (
-                  <button type="button" onClick={() => setIsForgotPasswordMode(true)} className="text-sm font-semibold text-teal-600 hover:text-teal-700 hover:underline">
+                  <button type="button" onClick={() => { clearAuthMessages(); setIsForgotPasswordMode(true); }} className="text-sm font-semibold text-teal-600 hover:text-teal-700 hover:underline">
                     Forgot Password?
                   </button>
                 )}
@@ -228,8 +283,8 @@ export default function TouristLoginPage({ setRole }) {
               </div>
             )}
 
-            <button 
-              onClick={isForgotPasswordMode ? handleResetPasswordSubmit : isLoginMode ? handleLoginSubmit : handleRegisterSubmit} 
+            <button
+              onClick={isForgotPasswordMode ? handleResetPasswordSubmit : isLoginMode ? handleLoginSubmit : handleRegisterSubmit}
               className="flex h-12 w-full items-center justify-center rounded-2xl bg-slate-900 text-white hover:bg-slate-800"
             >
               {isForgotPasswordMode ? (
@@ -238,16 +293,17 @@ export default function TouristLoginPage({ setRole }) {
                 <><LogIn className="mr-2 h-4 w-4" /> {isLoginMode ? "Login as Tourist" : "Register as Tourist"}</>
               )}
             </button>
-            
+
             <div className="mt-4 text-center text-sm text-slate-600">
               {isForgotPasswordMode ? (
                 <>
                   Remember your password?{" "}
-                  <button 
+                  <button
                     onClick={() => {
+                      clearAuthMessages();
                       setIsForgotPasswordMode(false);
                       setIsLoginMode(true);
-                    }} 
+                    }}
                     className="font-semibold text-slate-900 hover:underline"
                   >
                     Back to Login
@@ -256,8 +312,8 @@ export default function TouristLoginPage({ setRole }) {
               ) : isLoginMode ? (
                 <>
                   Don't have an account?{" "}
-                  <button 
-                    onClick={() => setIsLoginMode(false)} 
+                  <button
+                    onClick={() => { clearAuthMessages(); setIsLoginMode(false); }}
                     className="font-semibold text-slate-900 hover:underline"
                   >
                     Register here
@@ -266,8 +322,8 @@ export default function TouristLoginPage({ setRole }) {
               ) : (
                 <>
                   Already registered?{" "}
-                  <button 
-                    onClick={() => setIsLoginMode(true)} 
+                  <button
+                    onClick={() => { clearAuthMessages(); setIsLoginMode(true); }}
                     className="font-semibold text-slate-900 hover:underline"
                   >
                     Login here

@@ -13,8 +13,9 @@ const createTransporter = () => {
     return null;
   }
 
-  if (pass === 'your-16-char-app-password') {
-    console.error('❌ Error: EMAIL_PASS is still set to the placeholder. Please use a Google App Password.');
+  if (pass === 'your-16-char-app-password' || pass.includes('paste-your-new')) {
+    console.error('❌ Error: EMAIL_PASS is still set to a placeholder. Please use a 16-character Google App Password.');
+    console.info('👉 Get one here: https://myaccount.google.com/apppasswords');
     return null;
   }
 

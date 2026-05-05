@@ -14,6 +14,15 @@ const topDestinations = destinations.slice(0, 6);
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem("token");
+
+  const handleNavigation = (pathIfLoggedIn) => {
+    if (isLoggedIn) {
+      navigate(pathIfLoggedIn);
+    } else {
+      navigate("/tourist-login");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 w-full overflow-y-auto">
@@ -40,7 +49,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <button 
-              onClick={() => navigate("/tourist-login")}
+              onClick={() => handleNavigation("/district/east-godavari")}
               className="px-8 py-4 bg-blue-600 text-white rounded-full font-semibold text-lg hover:bg-blue-700 transition flex items-center justify-center gap-2 hover:scale-105"
             >
               Start Planning <ArrowRight className="w-5 h-5"/>
@@ -108,7 +117,7 @@ export default function HomePage() {
                 <div className="p-8 flex flex-col flex-grow">
                   <p className="text-slate-600 mb-8 flex-grow">{district.description}</p>
                   <button 
-                    onClick={() => navigate("/tourist-login")}
+                    onClick={() => handleNavigation(`/district/${district.id}`)}
                     className="flex justify-between items-center w-full group-hover:text-blue-600 font-bold transition-colors"
                   >
                     <span>Explore District</span>
@@ -132,14 +141,14 @@ export default function HomePage() {
                <div className="w-20 h-1.5 bg-emerald-500 rounded-full mb-4"></div>
                <p className="text-slate-600 max-w-xl">Places that our travelers love the most. Add them to your itinerary today.</p>
             </div>
-            <button onClick={() => navigate("/tourist-login")} className="hidden sm:flex text-blue-600 font-bold items-center gap-2 hover:underline group">
+            <button onClick={() => handleNavigation("/district/east-godavari")} className="hidden sm:flex text-blue-600 font-bold items-center gap-2 hover:underline group">
               View All <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform"/>
             </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {topDestinations.map(dest => (
-              <div key={dest.id} className="rounded-2xl border border-slate-200 overflow-hidden group hover:shadow-xl hover:border-slate-300 transition-all cursor-pointer bg-white" onClick={() => navigate("/tourist-login")}>
+              <div key={dest.id} className="rounded-2xl border border-slate-200 overflow-hidden group hover:shadow-xl hover:border-slate-300 transition-all cursor-pointer bg-white" onClick={() => handleNavigation(`/district/${dest.district}`)}>
                 <div className="h-56 overflow-hidden relative">
                   <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 shadow-sm border border-slate-200">
@@ -165,7 +174,7 @@ export default function HomePage() {
           </div>
           
           <div className="mt-10 text-center sm:hidden">
-             <button onClick={() => navigate("/tourist-login")} className="text-blue-600 font-bold items-center gap-2 hover:underline inline-flex">
+             <button onClick={() => handleNavigation("/district/east-godavari")} className="text-blue-600 font-bold items-center gap-2 hover:underline inline-flex">
               View All Destinations <ArrowRight className="w-4 h-4"/>
             </button>
           </div>
@@ -177,11 +186,17 @@ export default function HomePage() {
         {/* Abstract background pattern for CTA */}
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg width=\\\"60\\\" height=\\\"60\\\" viewBox=\\\"0 0 60 60\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\"%3E%3Cg fill=\\\"none\\\" fill-rule=\\\"evenodd\\\"%3E%3Cg fill=\\\"%23ffffff\\\" fill-opacity=\\\"1\\\"%3E%3Cpath d=\\\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\\\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"}}></div>
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">Ready to Experience the Magic?</h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">{isLoggedIn ? "Keep Exploring the Magic" : "Ready to Experience the Magic?"}</h2>
           <p className="text-xl text-slate-300 mb-10 max-w-2xl mx-auto">Join thousands of travelers who have already discovered the hidden gems of the Godavari region.</p>
-          <button onClick={() => navigate("/tourist-login")} className="px-10 py-5 bg-emerald-500 hover:bg-emerald-400 text-white rounded-full font-bold text-xl transition-all hover:scale-105 shadow-[0_10px_30px_rgba(16,185,129,0.3)]">
-            Create an Account Now
-          </button>
+          {isLoggedIn ? (
+            <button onClick={() => navigate("/profile")} className="px-10 py-5 bg-emerald-500 hover:bg-emerald-400 text-white rounded-full font-bold text-xl transition-all hover:scale-105 shadow-[0_10px_30px_rgba(16,185,129,0.3)]">
+              Go to Profile Dashboard
+            </button>
+          ) : (
+            <button onClick={() => navigate("/tourist-login")} className="px-10 py-5 bg-emerald-500 hover:bg-emerald-400 text-white rounded-full font-bold text-xl transition-all hover:scale-105 shadow-[0_10px_30px_rgba(16,185,129,0.3)]">
+              Create an Account Now
+            </button>
+          )}
         </div>
       </section>
 
